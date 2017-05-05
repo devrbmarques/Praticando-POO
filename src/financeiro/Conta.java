@@ -1,5 +1,5 @@
 package financeiro;
-
+//Conta nada sabe de ninguém por isso nela há somente seus atributos
 public class Conta {
 
 	private Float valor;

@@ -9,6 +9,8 @@ import financeiro.Mes;
 public class Usuario {
 
 	private String nome;
+	//Cria-se um Array dividas do tipo Dividas porque Usuario sabe quais são suas dívidas
+	//Assim prendemos a composição das classes Usuário e Divida
 	private List<Divida> dividas = new ArrayList<>();
 	private String cpf;
 
@@ -23,7 +25,7 @@ public class Usuario {
 	public List<Divida> getDividas() {
 		return dividas;
 	}
-
+	
 	public void setDividas(List<Divida> dividas) {
 		this.dividas = dividas;
 	}
