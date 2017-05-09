@@ -12,6 +12,10 @@ import pessoal.Usuario;
 public class Main {
 	//criação do Array usuários. Usuários cadastrados são guardados nele.
 	private static List<Usuario> usuarios = new ArrayList<>();
+	
+	public static Divida divida = new Divida();
+	//private static List<Conta> contas = divida.getContas();
+	
 	public static void main(String[] args) {
 		//Criação do menu
 		String operacao;
@@ -122,7 +126,7 @@ public class Main {
 					if (operacao.charAt(0) == '1') {
 			/*if '1', é chamado o método cadastrarConta e passa como parâmetro o objeto divida.
 			lembrando, nas linhas anteriores, setamos um determinado mês para divida.*/
-						cadastrarConta(divida);
+						cadastrarConta();
 					}
 					if (operacao.charAt(0) == 's') {
 			//por ser do tipo 'Usuario', variável 'ususarioEncontrado' chama o método addDivida() e passa como parâmetro a dívida recebida
@@ -134,7 +138,7 @@ public class Main {
 		
 		
 		
-		private static void cadastrarConta(Divida divida) {
+		private static void cadastrarConta() {
 			//Divida conhece sobre conta. Instancia-se um objeto 'conta' do tipo Conta
 			Conta conta = new Conta();
 			//Array composto pelas contas validas
@@ -192,15 +196,28 @@ public class Main {
 				JOptionPane.showMessageDialog(null, "Usuario nao cadastrado, voce sera redirecionado");
 				return;
 			}else {
+		//obtendo a lista de todas as contas a pagar
+				/*for (int i = 0; i < divida.getContas().size();i++) {
+					JOptionPane.showMessageDialog(null, "Conta -> " +divida.getContas());
+				}
+				for (Conta conta: contas) {
+					JOptionPane.showMessageDialog(null, "" +conta);
+				}*/
+				
+				
 				Mes mes = new Mes();
-				//solicitado ao usuario o mês que ele deseja saber o total de suas dívidas
+		//solicitado ao usuario o mês que ele deseja saber o total de suas dívidas
 				mes.setNomeMes(JOptionPane.showInputDialog("Informe o mes"));
-				Divida divida = usuarioEncontrado.buscarDivida(mes);
+				divida = usuarioEncontrado.buscarDivida(mes);
 
 				JOptionPane.showMessageDialog(null,
 						"Valor total divida de " + mes.getNomeMes() + " é " + divida.calcularValorTotal());
 			}
 		}
+		
+		
+		
+		
 		
 		
 }
