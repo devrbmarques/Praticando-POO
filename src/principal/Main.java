@@ -19,8 +19,8 @@ public class Main {
 			operacao = JOptionPane.showInputDialog(
 							"\t <<Controle de Financas>> \n "
 							+ "1- Cadastrar Usuário \n "
-							+ "2- Cadastrar Conta\n "
-							+ "3- Exlcuir conta\n "
+							+ "2- Cadastrar Conta   \n "
+							+ "3- Exlcuir conta     \n "
 							+ "4- Obter total por mês\n "
 							+ "s- Para sair " );
 
@@ -34,10 +34,11 @@ public class Main {
 
 			/*if (operacao.charAt(0) == '3') {
 				excluirConta();
-			}
+			}*/
 			
-			if (operacao.chartAt(0) =='4') {
-				obterTotalDivida();*/
+			if (operacao.charAt(0) =='4') {
+				obterTotalDivida();
+			}
 
 		} while (operacao.charAt(0) != 's');
 	}	
@@ -173,8 +174,33 @@ public class Main {
 			//ao término do cadastramento, a conta é cadastrada no array que há na classe Divida.
 			divida.addConta(conta);
 
-		}		
+		}
 		
+		
+		
+		private static void obterTotalDivida() {
+		
+			String cpf = JOptionPane.showInputDialog("Informe o cpf do usuario");
+			Usuario usuarioEncontrado = null;
+
+			for (Usuario usuario : usuarios) {
+				if (usuario.getCpf().equals(cpf)) {
+					usuarioEncontrado = usuario;
+				}
+			}
+			if (usuarioEncontrado == null) {
+				JOptionPane.showMessageDialog(null, "Usuario nao cadastrado, voce sera redirecionado");
+				return;
+			}else {
+				Mes mes = new Mes();
+				//solicitado ao usuario o mês que ele deseja saber o total de suas dívidas
+				mes.setNomeMes(JOptionPane.showInputDialog("Informe o mes"));
+				Divida divida = usuarioEncontrado.buscarDivida(mes);
+
+				JOptionPane.showMessageDialog(null,
+						"Valor total divida de " + mes.getNomeMes() + " é " + divida.calcularValorTotal());
+			}
+		}
 		
 		
 }
