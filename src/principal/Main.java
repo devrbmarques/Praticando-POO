@@ -92,19 +92,18 @@ public class Main {
 													 + "<maio>	    \n" 
 													 + "<junho>	    \n" 
 													 + "<julho>	    \n" 
-													 + "<jgosto>	\n" 
+													 + "<agosto>	\n" 
 													 + "<setembro>  \n" 
 													 + "<outubro>	\n" 
 													 + "<novembro>  \n" 
 													 + "<dezembro> \n\n" 
 													 + "Informe o mes da divida"));
-			//variável que será usada para ocorrência de o nome digitado pelo usuário não corresponda a mês algum
+			//variável que será usada para se ter um controle se o mês fornecido é válido ou inválido
 			int ocorrencia = 0;
+			//'iteracao' recebe o conteúdo de cada posição do array_mes
 			for (String iteracao : nome_mes) {
-				if(mes.getNomeMes() == iteracao) {
-					JOptionPane.showMessageDialog(null, "Pelo menos uma vez");
-					ocorrencia += 1;
-				}
+			//verifica se o nome do mês que o usuário forneceu é um mês válido. Variavel ocorrencia é incrementada
+				if(mes.getNomeMes().equals(iteracao)) ocorrencia += 1;
 			}
 			//caso usuario tenha digitado um mês invalido
 			if (ocorrencia == 0) {
@@ -116,30 +115,62 @@ public class Main {
 				divida.setMes(mes);
 				String operacao = null;
 				do {
-					operacao = JOptionPane.showInputDialog("\t <<Divida>> \n 1- Cadastrar Conta \n f- Finalizar cadastro de Divida\n ");
+			//menu para criacao de conta
+					operacao = JOptionPane.showInputDialog("\t <<Divida>> \n 1- Cadastrar Conta \n s- Finalizar cadastro de Divida\n ");
 
 					if (operacao.charAt(0) == '1') {
-			/*if '1', chama-se o método cadastrarConta e passa como parâmetro o objeto divida.
+			/*if '1', é chamado o método cadastrarConta e passa como parâmetro o objeto divida.
 			lembrando, nas linhas anteriores, setamos um determinado mês para divida.*/
 						cadastrarConta(divida);
 					}
-					if (operacao.charAt(0) == 'f') {
+					if (operacao.charAt(0) == 's') {
 			//por ser do tipo 'Usuario', variável 'ususarioEncontrado' chama o método addDivida() e passa como parâmetro a dívida recebida
 						usuarioEncontrado.addDivida(divida);
 					}
-				} while (operacao.charAt(0) != 'f');
+				} while (operacao.charAt(0) != 's');
 			}
 		}
 		
 		
 		
 		private static void cadastrarConta(Divida divida) {
+			//Divida conhece sobre conta. Instancia-se um objeto 'conta' do tipo Conta
 			Conta conta = new Conta();
-
-			conta.setCodigo(Integer.parseInt(JOptionPane.showInputDialog("Informe o codigo da conta")));
+			//Array composto pelas contas validas
+			String[] nome_conta = {"agua","luz","supermercado","gasolina","lazer"};
+			//usuário fornece o codigo da conta que deseja cadastrar
+			conta.setCodigo(Integer.parseInt(JOptionPane.showInputDialog("1- agua 			\n" 
+																	   + "2- luz			\n" 
+																	   + "3- supermercado	\n" 
+																	   + "4- gasolina		\n" 
+																	   + "5- lazer			\n\n" 
+																	   + "Informe o codigo da conta")));
+			//caso o valor do código fornecido pelo usuário ultrapassar os limites dos códigos já definidos
+			if ((conta.getCodigo() > 5) || (conta.getCodigo() < 1)) {
+				JOptionPane.showMessageDialog(null, "Codigo invalido, voce sera redirecionado.");
+				return;
+			}
+			//usuário fornece o nome da conta
 			conta.setNome(JOptionPane.showInputDialog("Informe o nome da conta"));
-			conta.setValor(Float.parseFloat(JOptionPane.showInputDialog("Informe o valor da conta")));
-
+			int contador = 0;
+			//'iteracao' recebe o conteúdo do array, um a um. 
+			for (String iteracao: nome_conta) {
+			/*já entra no for incrementando a variavel contador assim, caso a conta informada for agua, 
+			o codigo fornecido pelo usuário será o correspondente a conta*/
+				contador += 1;
+			//quando o nome da conta for igual ao do array, o loop é encerrado pelo comando 'break'
+				if (conta.getNome().equals(iteracao)) break;
+			} 
+			//verifica se a variavel contador corresponde ao código que o usuário inseriu. Assim definimos a integridaede das informações
+			if (contador == conta.getCodigo()) {
+			//caso corresponda, é direcionado ao último passo do cadastramento da conta que é inserir seu valor
+				conta.setValor(Float.parseFloat(JOptionPane.showInputDialog("Informe o valor da conta")));
+			}else {
+			//caso o valor de contador for diferente do código que o usuário inseriu quando lhe foi solicitado que inserisse o código da conta.
+				JOptionPane.showMessageDialog(null, "Codigo e nome da conta nao correspondem. Voce sera redirecionado");
+				return;
+			}
+			//ao término do cadastramento, a conta é cadastrada no array que há na classe Divida.
 			divida.addConta(conta);
 
 		}		
