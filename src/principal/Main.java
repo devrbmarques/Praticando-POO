@@ -13,8 +13,6 @@ public class Main {
 	//criação do Array usuários. Usuários cadastrados são guardados nele.
 	private static List<Usuario> usuarios = new ArrayList<>();
 	
-	public static Divida divida = new Divida();
-	//private static List<Conta> contas = divida.getContas();
 	
 	public static void main(String[] args) {
 		//Criação do menu
@@ -24,7 +22,7 @@ public class Main {
 							"\t <<Controle de Financas>> \n "
 							+ "1- Cadastrar Usuário \n "
 							+ "2- Cadastrar Conta   \n "
-							+ "3- Exlcuir conta     \n "
+							+ "3- Excluir conta     \n "
 							+ "4- Obter total por mês\n "
 							+ "s- Para sair " );
 
@@ -36,9 +34,9 @@ public class Main {
 				cadastrarDivida();
 			}
 
-			/*if (operacao.charAt(0) == '3') {
+			if (operacao.charAt(0) == '3') {
 				excluirConta();
-			}*/
+			}
 			
 			if (operacao.charAt(0) =='4') {
 				obterTotalDivida();
@@ -105,10 +103,10 @@ public class Main {
 													 + "Informe o mes da divida"));
 			//variável que será usada para se ter um controle se o mês fornecido é válido ou inválido
 			int ocorrencia = 0;
-			//'iteracao' recebe o conteúdo de cada posição do array_mes
-			for (String iteracao : nome_mes) {
+			//'it' recebe o conteúdo de cada posição do array_mes
+			for (String it : nome_mes) {
 			//verifica se o nome do mês que o usuário forneceu é um mês válido. Variavel ocorrencia é incrementada
-				if(mes.getNomeMes().equals(iteracao)) ocorrencia += 1;
+				if(mes.getNomeMes().equals(it)) ocorrencia += 1;
 			}
 			//caso usuario tenha digitado um mês invalido
 			if (ocorrencia == 0) {
@@ -126,7 +124,7 @@ public class Main {
 					if (operacao.charAt(0) == '1') {
 			/*if '1', é chamado o método cadastrarConta e passa como parâmetro o objeto divida.
 			lembrando, nas linhas anteriores, setamos um determinado mês para divida.*/
-						cadastrarConta();
+						cadastrarConta(divida);
 					}
 					if (operacao.charAt(0) == 's') {
 			//por ser do tipo 'Usuario', variável 'ususarioEncontrado' chama o método addDivida() e passa como parâmetro a dívida recebida
@@ -138,7 +136,7 @@ public class Main {
 		
 		
 		
-		private static void cadastrarConta() {
+		private static void cadastrarConta(Divida divida) {
 			//Divida conhece sobre conta. Instancia-se um objeto 'conta' do tipo Conta
 			Conta conta = new Conta();
 			//Array composto pelas contas validas
@@ -182,11 +180,73 @@ public class Main {
 		
 		
 		
-		private static void obterTotalDivida() {
+		private static void excluirConta() {
+			Divida divida = new Divida();
+			//Declara uma variável do tipo String 'cpf' e guarda o CPF informado logo abaixo
+			String cpf = JOptionPane.showInputDialog("Informe o cpf do usuario");
+			//Declara uma variável do tipo Usuario, 'usuarioEncontrado', e inicia-se com valor null = "vazio no JAVA"
+			Usuario usuarioEncontrado = null;
+			
+			//faz uma varredura no array usuarios, verificando um usuario do tipo Usuario por vez
+			for (Usuario usuario : usuarios) {
+			//compara se o cpf inserido é igual ao atributo cpf do usuário que já se tem cadastrado
+				if (usuario.getCpf().equals(cpf)) {
+					usuarioEncontrado = usuario;
+				}
+			}
+			
+			//caso cpf não seja de nenhum usuário já cadastrado, entra no 'if' logo abaixo
+			if (usuarioEncontrado == null) {
+				JOptionPane.showMessageDialog(null,"Usuario nao cadastrado");
+			//usando a função 'return', ele sai do método e não executa mais nada abaixo desse if
+				return;
+			}else {
+				Mes mes = new Mes();
+				String[] nome_mes = {"janeiro","fevereiro","marco","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"};
+				//guarda o mes da divida usando o método setNomeMes() no objeto criado 'mes'
+				mes.setNomeMes(JOptionPane.showInputDialog("<janeiro>   \n"
+														 + "<fevereiro> \n" 
+														 + "<marco>     \n" 
+														 + "<abril>	    \n" 
+														 + "<maio>	    \n" 
+														 + "<junho>	    \n" 
+														 + "<julho>	    \n" 
+														 + "<agosto>	\n" 
+														 + "<setembro>  \n" 
+														 + "<outubro>	\n" 
+														 + "<novembro>  \n" 
+														 + "<dezembro> \n\n" 
+														 + "Informe o mes da divida"));
+				//variável que será usada para se ter um controle se o mês fornecido é válido ou inválido
+				int ocorrencia = 0;
+				//'it' recebe o conteúdo de cada posição do array_mes
+				for (String it : nome_mes) {
+				//verifica se o nome do mês que o usuário forneceu é um mês válido. Variavel ocorrencia é incrementada
+					if(mes.getNomeMes().equals(it)) ocorrencia += 1;
+				}
+				//caso usuario tenha digitado um mês invalido
+				if (ocorrencia == 0) {
+					JOptionPane.showMessageDialog(null, "Nome do mes invalido!");
+				//usando a função 'return', ele sai do método e não executa mais nada abaixo desse if
+					return;
+				}else {
+					divida = usuarioEncontrado.buscarDivida(mes);
+					divida.deletarDivida(Integer.parseInt(JOptionPane.showInputDialog(null,  "" + divida.imprimirContas() + "Digite o codigo da conta que deseja excluir")));
+					return;
+				}
+			}
+		}
 		
+		
+		
+		private static void obterTotalDivida() {
+
+			
 			String cpf = JOptionPane.showInputDialog("Informe o cpf do usuario");
 			Usuario usuarioEncontrado = null;
-
+			Divida divida = new Divida();
+			Mes mes = new Mes();
+			
 			for (Usuario usuario : usuarios) {
 				if (usuario.getCpf().equals(cpf)) {
 					usuarioEncontrado = usuario;
@@ -196,29 +256,16 @@ public class Main {
 				JOptionPane.showMessageDialog(null, "Usuario nao cadastrado, voce sera redirecionado");
 				return;
 			}else {
-		//obtendo a lista de todas as contas a pagar
-				/*for (int i = 0; i < divida.getContas().size();i++) {
-					JOptionPane.showMessageDialog(null, "Conta -> " +divida.getContas());
-				}
-				for (Conta conta: contas) {
-					JOptionPane.showMessageDialog(null, "" +conta);
-				}*/
-				
-				
-				Mes mes = new Mes();
 		//solicitado ao usuario o mês que ele deseja saber o total de suas dívidas
 				mes.setNomeMes(JOptionPane.showInputDialog("Informe o mes"));
+				
+				
+				
 				divida = usuarioEncontrado.buscarDivida(mes);
-
-				JOptionPane.showMessageDialog(null,
+				JOptionPane.showMessageDialog(null,divida.imprimirContas()+
 						"Valor total divida de " + mes.getNomeMes() + " é " + divida.calcularValorTotal());
 			}
-		}
-		
-		
-		
-		
-		
+		}		
 		
 }
 	
